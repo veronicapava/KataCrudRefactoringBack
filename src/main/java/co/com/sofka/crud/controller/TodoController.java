@@ -24,10 +24,16 @@ public class TodoController {
 
     @PutMapping(value = "api/todo")
     public TodoEntities update(@RequestBody TodoEntities todo){
-        if(todo.getId() != null){
-            return service.save(todo);
+        System.out.println("Este es el todo:" + todo.getId());
+        try {
+            if(todo.getId() != null){
+                return service.save(todo);
+            }
+            throw new RuntimeException("No existe el id para actualizar");
+        } catch (Exception e){
+            System.out.println("Error: " + e);
         }
-        throw new RuntimeException("No existe el id para actualziar");
+        return todo;
     }
 
     @DeleteMapping(value = "api/{id}/todo")

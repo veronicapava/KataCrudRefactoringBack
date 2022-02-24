@@ -1,12 +1,7 @@
-package co.com.sofka.crud.model;
+package co.com.sofka.crud.dto;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+public class TodoDTO {
 
-public class TodoModel {
-
-        @Id
-        @GeneratedValue
         private Long id;
         private String name;
         private boolean completed;
@@ -43,4 +38,17 @@ public class TodoModel {
         public void setCompleted(boolean completed) {
             this.completed = completed;
         }
+
+        //ToString
+
+
+    @Override
+    public String toString() {
+        return "TodoModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", completed=" + completed +
+                ", groupListId='" + groupListId + '\'' +
+                '}';
+    }
 }

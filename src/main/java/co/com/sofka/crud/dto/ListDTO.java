@@ -1,38 +1,20 @@
-package co.com.sofka.crud.entities;
+package co.com.sofka.crud.dto;
 
-import co.com.sofka.crud.dto.ListDTO;
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-@Entity
-public class ListEntities {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id_list;
+public class ListDTO {
 
-    @Column(name = "list", nullable = false, unique = true)
+    private Long id_list;
     private String name;
 
-
     //Constructores
-    public void ListEntities(){
-
+    public ListDTO(){
     }
 
-    public void  ListEntities(String name) {
+    public ListDTO(String name) {
         this.name = name;
     }
 
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name="ListGroupTodos",
-            joinColumns = {@JoinColumn(name = "id_list")},
-            inverseJoinColumns = {@JoinColumn(name = "groupListId" )}
-    )
-    private List<TodoEntities> listtodo = new ArrayList<TodoEntities>();
 
 
     //Getters y setter
@@ -51,14 +33,6 @@ public class ListEntities {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<TodoEntities> getListtodo() {
-        return listtodo;
-    }
-
-    public void setListtodo(List<TodoEntities> listtodo) {
-        this.listtodo = listtodo;
     }
 
     //ToString
@@ -86,3 +60,4 @@ public class ListEntities {
         return Objects.hash(getId(), getName());
     }
 }
+
