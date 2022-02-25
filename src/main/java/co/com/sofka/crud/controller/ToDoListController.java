@@ -1,6 +1,7 @@
 package co.com.sofka.crud.controller;
 
 import co.com.sofka.crud.entities.TodoEntity;
+import co.com.sofka.crud.repository.TodoRepository;
 import co.com.sofka.crud.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,9 @@ public class ToDoListController {
 
     @Autowired
     private TodoService todoService;
+
+    @Autowired
+    private TodoRepository todoRepository;
 
 
     //Obtenemos todos los todos
@@ -43,7 +47,7 @@ public class ToDoListController {
 
 
     //Actualizar
-    @PutMapping(value = "todo/{id}")
+    @PutMapping(value = "/todo/{id}")
     public ResponseEntity<TodoEntity> updateTodo(@PathVariable("id") long id, @RequestBody TodoEntity todo){
         try {
             TodoEntity newToDo= todoService.updateTodo(id, todo);
@@ -55,23 +59,33 @@ public class ToDoListController {
     }
 
 
-
-
-
-
-
-
-
-
-
-   /* @DeleteMapping(value = "todo/{id}")
-    public void deleteTodoById(@PathVariable("id")Long id){
-        todoService.deleteTodo(id);
+    //Metodo delete
+    @DeleteMapping("/todo/delete/{id}")
+    public ResponseEntity<String> deleteToDo(@PathVariable("id") long id){
+        try {
+            todoRepository.findById(id);
+            if(todoRepository.findById(id).isPresent()){
+                todoRepository.deleteById(id);
+                return new ResponseEntity<>("ToDo eliminado", HttpStatus.OK);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+        return null;
     }
 
-    @GetMapping(value = "todo/{id}")
-    public TodoEntity getTodoId(@PathVariable("id") Long id){
-        return todoService.getTodo(id);
+
+
+    /*@DeleteMapping(value = "todo/delete/{id}")
+    public ResponseEntity<String> deleteTodoById(@PathVariable("id") long id){
+      *//* return new ResponseEntity<>(todoService.deleteToDoById(id), HttpStatus.OK) ;*//*
+        System.out.println(id);
+        try {
+            todoRepository.deleteById(id);
+            return new ResponseEntity<>("Project delete",HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
     }*/
 
 }
