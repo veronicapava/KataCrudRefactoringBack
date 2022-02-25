@@ -8,7 +8,6 @@ import java.util.Set;
 public class ListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, unique = true)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -16,8 +15,8 @@ public class ListEntity {
 
     //Una lista a muchos toDos
     //OrphanRemoval: remueve todos los toDos cuando no haya una lista padre
+    //Fetch: cuando se actualiza la lista, se actualizan todos los todos
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval= true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "to_do_list_id")
     private Set<TodoEntity> toDos; //nos indica que no se pueden repetir toDos
 
     //Constructores
@@ -48,14 +47,14 @@ public class ListEntity {
     public void setName(String name) {
         this.name = name;
     }
-
+/*
     public Set<TodoEntity> getToDos() {
         return toDos;
     }
 
     public void setToDos(Set<TodoEntity> toDos) {
         this.toDos = toDos;
-    }
+    }*/
 
     //ToString
 
@@ -64,7 +63,6 @@ public class ListEntity {
         return "ListEntity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", toDos=" + toDos +
                 '}';
     }
 }
