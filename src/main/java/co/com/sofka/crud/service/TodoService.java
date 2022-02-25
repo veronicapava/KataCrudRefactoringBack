@@ -21,6 +21,9 @@ public class TodoService {
 
     //Metodo para guardar todos
     public TodoEntity saveToDo(TodoEntity todo){
+        if(todo.getName().equals("fallido")){
+            throw new RuntimeException("Este nombre no esta permitido");
+        }
         return todoRepository.save(todo);
     }
 
