@@ -24,6 +24,9 @@ public class TodoService {
         if(todo.getName().equals("fallido")){
             throw new RuntimeException("Este nombre no esta permitido");
         }
+        if(todo.getList() == null){
+            throw new RuntimeException("La lista no puede ser vacia");
+        }
         return todoRepository.save(todo);
     }
 
