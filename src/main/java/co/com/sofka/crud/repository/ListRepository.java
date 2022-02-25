@@ -1,7 +1,7 @@
 package co.com.sofka.crud.repository;
 
-import co.com.sofka.crud.entities.ListEntities;
+import co.com.sofka.crud.entities.ListEntity;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ListRepository extends CrudRepository<ListEntities, Long> {
+public interface ListRepository extends CrudRepository<ListEntity, Long> {
 }

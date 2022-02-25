@@ -1,7 +1,7 @@
 package co.com.sofka.crud.controller;
 
-import co.com.sofka.crud.entities.TodoEntities;
-import co.com.sofka.crud.service.TodoService;
+import co.com.sofka.crud.entities.TodoEntity;
+import co.com.sofka.crud.service.ListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.*;
 public class TodoController {
 
     @Autowired
-    private TodoService service;
+    private ListService listservice;
 
     @GetMapping(value = "todos")
-    public Iterable<TodoEntities> list(){
-        return service.list();
+    public Iterable<TodoEntity> list(){
+        return listservice.list();
     }
     
-    @PostMapping(value = "todo")
-    public TodoEntities save(@RequestBody TodoEntities todo){
-        return service.save(todo);
+    @PostMapping("todo")
+    public TodoEntity saveTodo(@RequestBody TodoEntity todo){
+        return listservice.saveTodo(todo);
     }
 
     @PutMapping(value = "todo")
-    public TodoEntities update(@RequestBody TodoEntities todo){
+    public TodoEntity updateTodo(@RequestBody TodoEntity todo){
         try {
             if(todo.getId() != null){
-                return service.save(todo);
+                return listservice.saveTodo(todo);
             }
             throw new RuntimeException("No existe el id para actualizar");
         } catch (Exception e){
@@ -37,13 +37,13 @@ public class TodoController {
     }
 
     @DeleteMapping(value = "todo/{id}")
-    public void delete(@PathVariable("id")Long id){
-        service.delete(id);
+    public void deleteTodoById(@PathVariable("id")Long id){
+        listservice.deleteTodo(id);
     }
 
     @GetMapping(value = "todo/{id}")
-    public TodoEntities get(@PathVariable("id") Long id){
-        return service.get(id);
+    public TodoEntity getTodoId(@PathVariable("id") Long id){
+        return listservice.getTodo(id);
     }
 
 }
