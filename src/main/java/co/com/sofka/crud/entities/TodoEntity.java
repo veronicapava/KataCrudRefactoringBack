@@ -5,17 +5,18 @@ import javax.persistence.*;
 @Entity
 public class TodoEntity {
     @Id
-    @GeneratedValue
-    @Column(nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(nullable = false, unique = true)
     private String name;
-    @Column(nullable = false, unique = true)
+
+    @Column(nullable = false)
     private boolean completed;
 
     //Muchos toDos para una lista (Entities asociadas)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id") // Enlaza la entidad toDos a una lista usando su id
+    @JoinColumn(name = "id_list") // Enlaza la entidad toDos a una lista usando su id
     private ListEntity list;
 
 
