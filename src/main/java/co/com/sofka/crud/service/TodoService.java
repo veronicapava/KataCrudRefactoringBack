@@ -1,20 +1,39 @@
 package co.com.sofka.crud.service;
 
+import co.com.sofka.crud.dto.ToDoListDTO;
 import co.com.sofka.crud.entities.TodoEntity;
 import co.com.sofka.crud.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TodoService {
 
     @Autowired
     TodoRepository todoRepository;
+
+    //Metodo para obtener todos los todos mediante el DTO
+    public List<ToDoListDTO> getAllTodosWithList(){
+        return todoRepository.findAll().
+                stream().
+                map(this::convertEntityToDto).
+                collect(Collectors.toList());
+    }
+
+    private ToDoListDTO convertEntityToDto(TodoEntity todo){
+        ToDoListDTO todoDto = new ToDoListDTO();
+        todoDto.setIdToDo(todo.getId());
+        todoDto.setCompleted(todo.isCompleted());
+        todoDto.setNameToDo(todo.getName());
+        todoDto.setIdList(todo.getList().getId());
+        return todoDto;
+    }
 
     //Metodo para obtener todos los todos
     public ArrayList<TodoEntity> getAllToDos(){
@@ -33,8 +52,8 @@ public class TodoService {
     }
 
     //Metodo para obtener todos por id
-    public Optional<TodoEntity> getToDoById(Long id){
-        return todoRepository.findById(id);
+    public TodoEntity getToDoById(Long id){
+        return todoRepository.findById(id).orElseThrow();
     }
 
     //Metodo para actualizar todos por id
@@ -57,15 +76,20 @@ public class TodoService {
         throw new RuntimeException("No existe el id para actualizar");
     }
 
-    //Metodo para eliminar todos por id
+
+
+    /*//Metodo para eliminar todos por id
     public String deleteToDoById(Long id){
         Optional<TodoEntity> currentTodoById = todoRepository.findById(id);
+
         if (currentTodoById.isPresent()){
-            todoRepository.deleteById(id);
+            todoRepository.delete(currentTodoById);
             return "ToDo Eliminado papu";
         } else {
             throw new RuntimeException("No existe el todo a eliminar");
         }
-    }
+    }*/
+
+
 
 }
