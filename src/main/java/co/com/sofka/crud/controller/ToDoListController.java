@@ -41,21 +41,30 @@ public class ToDoListController {
         }
     }
 
-/*
-    @PutMapping(value = "todo")
-    public TodoEntity updateTodo(@RequestBody TodoEntity todo){
+
+    //Actualizar
+    @PutMapping(value = "todo/{id}")
+    public ResponseEntity<TodoEntity> updateTodo(@PathVariable("id") long id, @RequestBody TodoEntity todo){
         try {
-            if(todo.getId() != null){
-                return todoService.saveTodo(todo);
-            }
-            throw new RuntimeException("No existe el id para actualizar");
+            TodoEntity newToDo= todoService.updateTodo(id, todo);
+            return new ResponseEntity<>(newToDo, HttpStatus.OK);
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println("No se puede cambiar la lista");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return todo;
     }
 
-    @DeleteMapping(value = "todo/{id}")
+
+
+
+
+
+
+
+
+
+
+   /* @DeleteMapping(value = "todo/{id}")
     public void deleteTodoById(@PathVariable("id")Long id){
         todoService.deleteTodo(id);
     }
@@ -63,6 +72,6 @@ public class ToDoListController {
     @GetMapping(value = "todo/{id}")
     public TodoEntity getTodoId(@PathVariable("id") Long id){
         return todoService.getTodo(id);
-    }
-*/
+    }*/
+
 }
