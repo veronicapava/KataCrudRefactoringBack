@@ -1,13 +1,9 @@
 package co.com.sofka.crud.controller;
 
-import co.com.sofka.crud.entities.TodoEntity;
-import co.com.sofka.crud.repository.TodoRepository;
+import co.com.sofka.crud.dto.ToDoListDTO;
 import co.com.sofka.crud.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -18,11 +14,18 @@ public class ToDoListController {
     @Autowired
     private TodoService todoService;
 
-    @Autowired
-    private TodoRepository todoRepository;
+    //Obtener los todos con dto
+    @GetMapping(value = "/todos")
+    public List<ToDoListDTO> getAllTodoS(){
+        return todoService.getAllTodosWithList();
+    }
 
+   /* @GetMapping(value = "/todosolito")
+    public List<TodoEntity> getAllTodo(){
+        return todoService.getAllToDos();
+    }*/
 
-    //Obtenemos todos los todos
+    /*//Obtenemos todos los todos
     @GetMapping(value = "/todos")
     public ResponseEntity<List<TodoEntity>> getAllToDos(){
       List<TodoEntity> allToDos = todoService.getAllToDos();
@@ -30,10 +33,10 @@ public class ToDoListController {
           return new ResponseEntity<>(HttpStatus.NO_CONTENT);
       }
       return new ResponseEntity<>(allToDos, HttpStatus.OK);
-    }
+    }*/
 
     //Guardar todos
-    @PostMapping("/todo")
+   /* @PostMapping("/todo")
     public ResponseEntity<TodoEntity> saveTodo(@RequestBody TodoEntity todo){
         System.out.println(todo.toString());
         try{
@@ -44,10 +47,10 @@ public class ToDoListController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+*/
 
-
-    //Actualizar
-    @PutMapping(value = "/todo/{id}")
+    //Actualizar todos por id
+   /* @PutMapping(value = "/todo/{id}")
     public ResponseEntity<TodoEntity> updateTodo(@PathVariable("id") long id, @RequestBody TodoEntity todo){
         try {
             TodoEntity newToDo= todoService.updateTodo(id, todo);
@@ -56,23 +59,32 @@ public class ToDoListController {
             System.out.println("No se puede cambiar la lista");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
+
+    /*@GetMapping("/todo/{id}")
+    public void deleteTodo(@PathVariable("id") long id){
+        todoService.deleteTodo(id);
+
+    }*/
 
 
-    //Metodo delete
+    /*//Metodo delete
     @DeleteMapping("/todo/delete/{id}")
     public ResponseEntity<String> deleteToDo(@PathVariable("id") long id){
+
         try {
-            todoRepository.findById(id);
-            if(todoRepository.findById(id).isPresent()){
-                todoRepository.deleteById(id);
-                return new ResponseEntity<>("ToDo eliminado", HttpStatus.OK);
-            }
+            todoService.deleteToDoById(id);
+            return new ResponseEntity<>("ToDo eliminado", HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
-        return null;
-    }
+
+    }*/
+
+    /*@DeleteMapping(value = "api/{id}")
+    public void deleteById(@PathVariable("id")Long id){
+        todoService.deleteToDoById(id);
+    }*/
 
 
 
