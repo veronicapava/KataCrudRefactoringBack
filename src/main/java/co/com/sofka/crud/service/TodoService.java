@@ -90,16 +90,15 @@ public class TodoService {
     }
 
 
-
-
     //Metodo para eliminar todos por id
     public String deleteToDoById(Long id){
         Optional<TodoEntity> currentTodoById = todoRepository.findById(id);
 
         if (currentTodoById.isPresent()){
+
             TodoEntity _currentTodo = currentTodoById.get();
             todoRepository.delete(_currentTodo);
-            return "ToDo Eliminado papu";
+            return "ToDo eliminado";
         } else {
             throw new RuntimeException("No existe el todo a eliminar");
         }

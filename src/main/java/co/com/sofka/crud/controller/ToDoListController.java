@@ -63,36 +63,15 @@ public class ToDoListController {
     }
 
 
-    /*//Metodo delete
+    //Metodo delete
     @DeleteMapping("/todo/delete/{id}")
     public ResponseEntity<String> deleteToDo(@PathVariable("id") long id){
-
         try {
-            todoService.deleteToDoById(id);
-            return new ResponseEntity<>("ToDo eliminado", HttpStatus.OK);
+            return new ResponseEntity<>(todoService.deleteToDoById(id), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
+    }
 
-    }*/
-
-    /*@DeleteMapping(value = "api/{id}")
-    public void deleteById(@PathVariable("id")Long id){
-        todoService.deleteToDoById(id);
-    }*/
-
-
-
-    /*@DeleteMapping(value = "todo/delete/{id}")
-    public ResponseEntity<String> deleteTodoById(@PathVariable("id") long id){
-      *//* return new ResponseEntity<>(todoService.deleteToDoById(id), HttpStatus.OK) ;*//*
-        System.out.println(id);
-        try {
-            todoRepository.deleteById(id);
-            return new ResponseEntity<>("Project delete",HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
-    }*/
 
 }
