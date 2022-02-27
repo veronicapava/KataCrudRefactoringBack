@@ -1,6 +1,7 @@
 package co.com.sofka.crud.controller;
 
 import co.com.sofka.crud.entities.ListEntity;
+import co.com.sofka.crud.entities.TodoEntity;
 import co.com.sofka.crud.repository.ListRepository;
 import co.com.sofka.crud.service.ListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,9 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class ListController {
 
-
     @Autowired
     ListService listservice;
 
-    @Autowired
-    ListRepository listRepository;
 
     //Obtenemos todas las listas
     @GetMapping(value = "/list")
@@ -31,6 +29,17 @@ public class ListController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(allList, HttpStatus.OK);
+    }
+
+    //Buscar lista by Id
+    @GetMapping(value = "/list/{id}")
+    public ResponseEntity<ListEntity> getListById(@PathVariable("id") Long id){
+        Optional<ListEntity> listData = listservice.getListById(id);
+        if(listData.isPresent()){
+            return new ResponseEntity<>(listData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     //Guardar lista
@@ -44,47 +53,26 @@ public class ListController {
         }
     }
 
-    //Buscar lista by Id
-    @GetMapping(value = "list/{id}")
-    public ResponseEntity<ListEntity> getListById(@PathVariable("id") Long id){
-        Optional<ListEntity> listData = listRepository.findById(id);
-        if(listData.isPresent()){
-            return new ResponseEntity<>(listData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-
-
-
-
-
-
-/*
-
-
-
-    @PutMapping(value = "list")
-    public ListEntity updateList(@RequestBody ListEntity list){
+    //Actualizar lista por id
+    @PutMapping(value = "/list/{id}")
+    public ResponseEntity<ListEntity> updateList(@PathVariable("id") long id, @RequestBody ListEntity list){
         try {
-            if(list.getId() != null){
-                return listservice.saveList(list);
-            }
-            throw new RuntimeException("No existe el id para actualizar");
+            ListEntity newList= listservice.updateList(id, list);
+            return new ResponseEntity<>(newList, HttpStatus.OK);
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println("No se puede cambiar la lista");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return list;
     }
 
     @DeleteMapping(value = "list/{id}")
-    public void deleteListById(@PathVariable("id")Long id){
-        listservice.deleteList(id);
+    public ResponseEntity<String> deleteListById(@PathVariable("id")Long id){
+        try {
+            listservice.deleteListById(id);
+            return new ResponseEntity<>("Lista eliminada", HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
     }
-
-
-
-*/
 
 }

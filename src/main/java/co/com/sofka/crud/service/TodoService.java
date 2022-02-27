@@ -1,9 +1,12 @@
 package co.com.sofka.crud.service;
 
 import co.com.sofka.crud.dto.ToDoListDTO;
+import co.com.sofka.crud.entities.ListEntity;
 import co.com.sofka.crud.entities.TodoEntity;
 import co.com.sofka.crud.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,10 +38,13 @@ public class TodoService {
         return todoDto;
     }
 
-    //Metodo para obtener todos los todos
-    public ArrayList<TodoEntity> getAllToDos(){
-        return (ArrayList<TodoEntity>) todoRepository.findAll();
-    }
+
+    //Metodo para guardar todos
+    /*public List<ToDoListDTO> saveToDO(ToDoListDTO tododto){
+        return todoRepository.save(tododto);
+    }*/
+
+
 
     //Metodo para guardar todos
     public TodoEntity saveToDo(TodoEntity todo){
@@ -53,7 +59,14 @@ public class TodoService {
 
     //Metodo para obtener todos por id
     public TodoEntity getToDoById(Long id){
-        return todoRepository.findById(id).orElseThrow();
+        Optional<TodoEntity> todo = todoRepository.findById(id);
+
+        if(todo.isPresent()){
+            return todo.get();
+        } else {
+            throw new RuntimeException("No existe todo");
+        }
+        /*return todoRepository.findById(id).orElseThrow();*/
     }
 
     //Metodo para actualizar todos por id
@@ -78,18 +91,18 @@ public class TodoService {
 
 
 
-    /*//Metodo para eliminar todos por id
+
+    //Metodo para eliminar todos por id
     public String deleteToDoById(Long id){
         Optional<TodoEntity> currentTodoById = todoRepository.findById(id);
 
         if (currentTodoById.isPresent()){
-            todoRepository.delete(currentTodoById);
+            TodoEntity _currentTodo = currentTodoById.get();
+            todoRepository.delete(_currentTodo);
             return "ToDo Eliminado papu";
         } else {
             throw new RuntimeException("No existe el todo a eliminar");
         }
-    }*/
-
-
+    }
 
 }

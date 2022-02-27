@@ -1,10 +1,15 @@
 package co.com.sofka.crud.controller;
 
 import co.com.sofka.crud.dto.ToDoListDTO;
+import co.com.sofka.crud.entities.ListEntity;
+import co.com.sofka.crud.entities.TodoEntity;
 import co.com.sofka.crud.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -14,29 +19,16 @@ public class ToDoListController {
     @Autowired
     private TodoService todoService;
 
-    //Obtener los todos con dto
+
+    //Obtener los todos con dto de tipo todowithlist
     @GetMapping(value = "/todos")
     public List<ToDoListDTO> getAllTodoS(){
         return todoService.getAllTodosWithList();
     }
 
-   /* @GetMapping(value = "/todosolito")
-    public List<TodoEntity> getAllTodo(){
-        return todoService.getAllToDos();
-    }*/
-
-    /*//Obtenemos todos los todos
-    @GetMapping(value = "/todos")
-    public ResponseEntity<List<TodoEntity>> getAllToDos(){
-      List<TodoEntity> allToDos = todoService.getAllToDos();
-      if(allToDos.isEmpty()){
-          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
-      return new ResponseEntity<>(allToDos, HttpStatus.OK);
-    }*/
 
     //Guardar todos
-   /* @PostMapping("/todo")
+   @PostMapping("/todo")
     public ResponseEntity<TodoEntity> saveTodo(@RequestBody TodoEntity todo){
         System.out.println(todo.toString());
         try{
@@ -47,7 +39,7 @@ public class ToDoListController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-*/
+
 
     //Actualizar todos por id
    /* @PutMapping(value = "/todo/{id}")
@@ -61,11 +53,14 @@ public class ToDoListController {
         }
     }*/
 
-    /*@GetMapping("/todo/{id}")
-    public void deleteTodo(@PathVariable("id") long id){
-        todoService.deleteTodo(id);
-
-    }*/
+    @GetMapping("/todo/{id}")
+    public ResponseEntity<TodoEntity> getTodobyId(@PathVariable("id") long id){
+        try{
+            return new ResponseEntity<>(todoService.getToDoById(id),HttpStatus.OK);
+        } catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     /*//Metodo delete
