@@ -47,14 +47,6 @@ public class ListEntity {
     public void setName(String name) {
         this.name = name;
     }
-/*
-    public Set<TodoEntity> getToDos() {
-        return toDos;
-    }
-
-    public void setToDos(Set<TodoEntity> toDos) {
-        this.toDos = toDos;
-    }*/
 
     //ToString
 
