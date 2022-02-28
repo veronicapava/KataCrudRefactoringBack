@@ -1,17 +1,14 @@
 package co.com.sofka.crud.service;
 
 import co.com.sofka.crud.dto.ToDoListDTO;
-import co.com.sofka.crud.entities.ListEntity;
 import co.com.sofka.crud.entities.TodoEntity;
 import co.com.sofka.crud.repository.TodoRepository;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -21,7 +18,10 @@ public class TodoService {
     @Autowired
     TodoRepository todoRepository;
 
-    //Metodo para obtener todos los todos mediante el DTO
+    @Autowired
+    ModelMapper mapper;
+
+    //Metodo para obtener todos los toDos mediante el DTO
     public List<ToDoListDTO> getAllTodosWithList(){
         return todoRepository.findAll().
                 stream().
@@ -30,56 +30,44 @@ public class TodoService {
     }
 
     private ToDoListDTO convertEntityToDto(TodoEntity todo){
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         ToDoListDTO todoDto = new ToDoListDTO();
-        todoDto.setIdToDo(todo.getId());
-        todoDto.setCompleted(todo.isCompleted());
-        todoDto.setNameToDo(todo.getName());
-        todoDto.setIdList(todo.getList().getId());
+        todoDto = mapper.map(todo, ToDoListDTO.class);
         return todoDto;
     }
 
 
-    //Metodo para guardar todos
-    /*public List<ToDoListDTO> saveToDO(ToDoListDTO tododto){
-        return todoRepository.save(tododto);
-    }*/
-
-
-
-    //Metodo para guardar todos
-    public TodoEntity saveToDo(TodoEntity todo){
-        if(todo.getName().equals("fallido")){
-            throw new RuntimeException("Este nombre no esta permitido");
-        }
-        if(todo.getList() == null){
-            throw new RuntimeException("La lista no puede ser vacia");
-        }
-        return todoRepository.save(todo);
+    //Guardar toDos usando DTO
+    public ToDoListDTO saveToDo(ToDoListDTO todo){
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        TodoEntity todoEnt = new TodoEntity();
+        todoEnt = mapper.map(todo, TodoEntity.class);
+        if(todoEnt.getList() == null){
+            throw new RuntimeException("La lista no puede ser vacía cuando se crea un todo");}
+        TodoEntity hola = todoRepository.save(todoEnt);
+        return mapper.map(hola, ToDoListDTO.class);
     }
 
-    //Metodo para obtener todos por id
+
+    //Metodo para obtener toDos por id
     public TodoEntity getToDoById(Long id){
         Optional<TodoEntity> todo = todoRepository.findById(id);
-
         if(todo.isPresent()){
             return todo.get();
         } else {
             throw new RuntimeException("No existe todo");
         }
-        /*return todoRepository.findById(id).orElseThrow();*/
     }
 
-    //Metodo para actualizar todos por id
-    public TodoEntity updateTodo(Long id, TodoEntity todo){
+    //Metodo para actualizar toDos por id
+    public TodoEntity updateTodo(long id, TodoEntity todo){
         Optional<TodoEntity> currentTodo = todoRepository.findById(id);
 
         if (currentTodo.isPresent()){
             TodoEntity _currentTodo = currentTodo.get();
-            Long currentList = _currentTodo.getList().getId();
-            Long newTodoListId = todo.getList().getId();
-
-
-            if(!Objects.equals(currentList, newTodoListId)){
+            long currentList = _currentTodo.getList().getId();
+            long newTodoListId = todo.getList().getId();
+            if(currentList != newTodoListId){
                 throw new RuntimeException("Cambiar la lista está prohibido");
             }
         }
@@ -90,12 +78,10 @@ public class TodoService {
     }
 
 
-    //Metodo para eliminar todos por id
+    //Metodo para eliminar toDos por id
     public String deleteToDoById(Long id){
         Optional<TodoEntity> currentTodoById = todoRepository.findById(id);
-
         if (currentTodoById.isPresent()){
-
             TodoEntity _currentTodo = currentTodoById.get();
             todoRepository.delete(_currentTodo);
             return "ToDo eliminado";
